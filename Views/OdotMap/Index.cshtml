@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "ODOT Traffic Incidents";
+}
+
+<!-- ArcGIS JS API from Esri CDN -->
+<!-- (rendering these in the <head>) -->
+@section HeadScripts {
+    <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
+    <link rel="stylesheet" href="~/css/odotMap.css" asp-append-version="true" />
+}
+
+<h1>ODOT Traffic Incident Map</h1>
+
+<div id="viewDiv"></div>
+
+@section Scripts {
+    <script type="module" src="~/js/odotMap.js"></script>
+}
