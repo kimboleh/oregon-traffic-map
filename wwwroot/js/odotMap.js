@@ -8,6 +8,7 @@ const map = new Map({
     basemap: "streets-navigation-vector"
 });
 
+// Current default map view starts around Bend, OR
 const view = new MapView({
     container: "viewDiv",
     map: map,
@@ -24,43 +25,41 @@ const graphicsLayer = new GraphicsLayer();
 map.add(graphicsLayer);
 
 incidents.forEach(incident => {
-    if (!incident.longitude || !incident.latitude) {
-        return;
+    if (incident.longitude && incident.latitude) {
+        const point = {
+            type: "point",
+            longitude: incident.longitude,
+            latitude: incident.latitude
+        };
+
+        const symbol = {
+            type: "simple-marker",
+            color: severityColor(incident.severity),
+            size: 10,
+            outline: { color: "white", width: 1 }
+        };
+
+        const popupTemplate = {
+            title: incident.eventType ?? "Traffic Incident",
+            content: `
+                <b>Category:</b> ${incident.category ?? "Unknown"}<br/>
+                <b>Severity:</b> ${incident.severity ?? "Unknown"}<br/>
+                <b>Route:</b> ${incident.route ?? "Unknown"}<br/>
+                <b>Milepost:</b> ${incident.milepost ?? "Unknown"}<br/>
+                <b>Location:</b> ${incident.locationName ?? "Unknown"}<br/>
+                <b>Last Updated:</b> ${incident.lastUpdated ? new Date(incident.lastUpdated).toLocaleString() : "Unknown"}<br/>
+                <b>Comments:</b> ${incident.comments ?? "None"}
+            `
+        };
+
+        const graphic = new Graphic({
+            geometry: point,
+            symbol: symbol,
+            popupTemplate: popupTemplate
+        });
+
+        graphicsLayer.add(graphic);
     }
-
-    const point = {
-        type: "point",
-        longitude: incident.longitude,
-        latitude: incident.latitude
-    };
-
-    const symbol = {
-        type: "simple-marker",
-        color: severityColor(incident.severity),
-        size: 10,
-        outline: { color: "white", width: 1 }
-    };
-
-    const popupTemplate = {
-        title: incident.eventType ?? "Traffic Incident",
-        content: `
-            <b>Category:</b> ${incident.category ?? "Unknown"}<br/>
-            <b>Severity:</b> ${incident.severity ?? "Unknown"}<br/>
-            <b>Route:</b> ${incident.route ?? "Unknown"}<br/>
-            <b>Milepost:</b> ${incident.milepost ?? "Unknown"}<br/>
-            <b>Location:</b> ${incident.locationName ?? "Unknown"}<br/>
-            <b>Last Updated:</b> ${incident.lastUpdated ? new Date(incident.lastUpdated).toLocaleString() : "Unknown"}<br/>
-            <b>Comments:</b> ${incident.comments ?? "None"}
-        `
-    };
-
-    const graphic = new Graphic({
-        geometry: point,
-        symbol: symbol,
-        popupTemplate: popupTemplate
-    });
-
-    graphicsLayer.add(graphic);
 });
 
 // Color-code points by severity
