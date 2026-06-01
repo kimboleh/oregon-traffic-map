@@ -2,7 +2,7 @@ namespace OdotTrafficIncidentMap.Models;
 
 public class Incident
 {
-    public string? IncidentId { get; set; }
+    public string IncidentId { get; set; }
     public string? EventTypeId { get; set; }
     public string? Headline { get; set; }
     public string? Category { get; set; }

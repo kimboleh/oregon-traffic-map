@@ -9,18 +9,18 @@ builder.Services.AddHttpClient("TripCheck", client =>
     client.Timeout = TimeSpan.FromSeconds(10);
 });
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddControllersWithViews();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IIncidentService, IncidentService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    // The default HSTS value is 30 days
     app.UseHsts();
 }
 

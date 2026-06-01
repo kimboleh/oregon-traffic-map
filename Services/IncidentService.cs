@@ -19,6 +19,10 @@ public class IncidentService : IIncidentService
         _configuration = configuration;
     }
 
+    /**
+      * Makes an HTTP request from the ODOT TripCheck data and returns an array
+       * of Incidents.
+      */
     public async Task<List<Incident>> GetActiveIncidentsAsync()
     {
         var apiKey = _configuration["TripCheck:ApiKey"];
@@ -38,15 +42,6 @@ public class IncidentService : IIncidentService
         {
             var location = item.GetProperty("location");
             var startLocation = location.GetProperty("start-location");
-
-            // end-location can be empty, check before reading it
-            double? endLat = null, endLon = null;
-            if (location.TryGetProperty("end-location", out var endLocation) &&
-                endLocation.ValueKind != JsonValueKind.Null)
-            {
-                endLat = GetDouble(endLocation, "end-lat");
-                endLon = GetDouble(endLocation, "end-long");
-            }
 
             incidents.Add(new Incident
             {
