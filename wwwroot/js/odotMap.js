@@ -60,19 +60,53 @@ incidents.forEach(incident => {
 // Returns the appropriate symbol to use for the incident
 function eventSymbol(eventTypeId, severity) {
     var symbol = {};
+    var color = severityColor(severity);
 
+    // road work
     if (eventTypeId === "RW") symbol = {
         type: "picture-marker",
-        url: "/img/icons/roadwork.svg",
+        url: "/img/icons/roadwork-" + (severityColor(severity) === 'red' ? 'red' : 
+        'orange') + ".svg",
         width: "24px",
         height: "24px"
     };
-    // TODO: implement other icons!
-    // else if (eventTypeId === "OB") symbol = symbol;
-    // else if (eventTypeId === "DV") symbol = symbol;
-    // else if (eventTypeId === "VH") symbol = symbol;
-    // else if (eventTypeId === "MS") symbol = symbol;
-    // else if (eventTypeId === "DS") symbol = symbol;
+    // obstruction
+    else if (eventTypeId === "OB") symbol = {
+        type: "picture-marker",
+        url: "/img/icons/caution-" + (severityColor(severity) === 'red' ? 'red' : 
+        'orange') + ".svg",
+        width: "24px",
+        height: "20px"
+    };
+    // device maintenance
+    else if (eventTypeId === "DV") symbol = {
+        type: "picture-marker",
+        url: "/img/icons/device-maintenance.svg",
+        width: "24px",
+        height: "24px"
+    };
+    // vehicle accident
+    else if (eventTypeId === "VH") symbol = {
+        type: "picture-marker",
+        url: "/img/icons/accident-" + severityColor(severity) + ".svg",
+        width: "24px",
+        height: "24px"
+    };
+    // closure
+    else if (eventTypeId === "MS") symbol = {
+        type: "picture-marker",
+        url: "/img/icons/closure.svg",
+        width: "20px",
+        height: "20px"
+    };
+    // wildfire
+    else if (eventTypeId === "DS") symbol = {
+        type: "picture-marker",
+        url: "/img/icons/wildfire.svg",
+        width: "24px",
+        height: "24px"
+    };
+    // default
     else symbol = {
         type: "simple-marker",
         color: severityColor(severity),
@@ -85,16 +119,16 @@ function eventSymbol(eventTypeId, severity) {
 
 // Color-code points by severity
 function severityColor(severity) {
-    var sevColor = [0, 130, 80];
+    var sevColor = "green"; // default severity is minor
     const s = severity.toLowerCase();
     if (s.includes("minor") || 
         s.includes("20 min") || 
-        s.includes("miminum delay")) 
-            sevColor = [230, 180, 0]; // green
+        s.includes("miminum delay"))
+            sevColor= "green";
     else if (s.includes("major") || 
-            s.includes("2 hr")) 
-                sevColor = [220, 80, 0]; // yellow
-    else if (s.includes("closure")) sevColor = [180, 0, 0]; // red
+            s.includes("2 hr"))
+                sevColor = "yellow";
+    else if (s.includes("closure")) sevColor = "red";
     
     return sevColor;
 }
