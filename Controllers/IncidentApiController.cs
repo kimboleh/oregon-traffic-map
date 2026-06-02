@@ -5,6 +5,10 @@ using OdotTrafficIncidentMap.Services;
 
 namespace OdotTrafficIncidentMap.Controllers;
 
+/**
+  * Creates an API endpoint at /api/incidents for the app to pull incidents
+  * from.
+  */
 [ApiController]
 [Route("api/incidents")]
 public class IncidentApiController : ControllerBase

@@ -16,7 +16,7 @@ const view = new MapView({
     zoom: 7
 });
 
-// Fetch incidents from the C# API endpoint
+// Fetch incidents from the API endpoint
 const response = await fetch("/api/incidents");
 const incidents = await response.json();
 
@@ -32,17 +32,12 @@ incidents.forEach(incident => {
             latitude: incident.latitude
         };
 
-        const symbol = {
-            type: "simple-marker",
-            color: severityColor(incident.severity),
-            size: 10,
-            outline: { color: "white", width: 1 }
-        };
+        const symbol = eventSymbol(incident.eventTypeId, incident.severity);
 
         const popupTemplate = {
-            title: incident.eventType ?? "Traffic Incident",
+            title: incidentTitle(incident.eventTypeId),
             content: `
-                <b>Category:</b> ${incident.category ?? "Unknown"}<br/>
+                <b>Headline:</b> ${incident.headline ?? "Unknown"}<br/>
                 <b>Severity:</b> ${incident.severity ?? "Unknown"}<br/>
                 <b>Route:</b> ${incident.route ?? "Unknown"}<br/>
                 <b>Milepost:</b> ${incident.milepost ?? "Unknown"}<br/>
@@ -62,12 +57,57 @@ incidents.forEach(incident => {
     }
 });
 
+// Returns the appropriate symbol to use for the incident
+function eventSymbol(eventTypeId, severity) {
+    var symbol = {};
+
+    if (eventTypeId === "RW") symbol = {
+        type: "picture-marker",
+        url: "/img/icons/roadwork.svg",
+        width: "24px",
+        height: "24px"
+    };
+    // TODO: implement other icons!
+    // else if (eventTypeId === "OB") symbol = symbol;
+    // else if (eventTypeId === "DV") symbol = symbol;
+    // else if (eventTypeId === "VH") symbol = symbol;
+    // else if (eventTypeId === "MS") symbol = symbol;
+    // else if (eventTypeId === "DS") symbol = symbol;
+    else symbol = {
+        type: "simple-marker",
+        color: severityColor(severity),
+        size: 10,
+        outline: { color: "white", width: 1 }
+    };
+
+    return symbol;
+}
+
 // Color-code points by severity
 function severityColor(severity) {
-    if (!severity) return [128, 128, 128];
+    var sevColor = [0, 130, 80];
     const s = severity.toLowerCase();
-    if (s.includes("closure")) return [180, 0, 0];
-    if (s.includes("major") || s.includes("2 hr")) return [220, 80, 0];
-    if (s.includes("minor") || s.includes("20 min")) return [230, 180, 0];
-    return [0, 130, 80];
+    if (s.includes("minor") || 
+        s.includes("20 min") || 
+        s.includes("miminum delay")) 
+            sevColor = [230, 180, 0]; // green
+    else if (s.includes("major") || 
+            s.includes("2 hr")) 
+                sevColor = [220, 80, 0]; // yellow
+    else if (s.includes("closure")) sevColor = [180, 0, 0]; // red
+    
+    return sevColor;
+}
+
+function incidentTitle(eventTypeId) {
+    var popupHeadline = "";
+    if (!eventTypeId) popupHeadline = "Misc. Incident";
+    else if (eventTypeId === "RW") popupHeadline = "Road Work";
+    else if (eventTypeId === "OB") popupHeadline = "Obstruction";
+    else if (eventTypeId === "DV") popupHeadline = "Device Maintanence";
+    else if (eventTypeId === "VH") popupHeadline = "Vehicle Crash";
+    else if (eventTypeId === "MS") popupHeadline = "Closure";
+    else if (eventTypeId === "DS") popupHeadline = "Wildfire";
+
+    return popupHeadline;
 }

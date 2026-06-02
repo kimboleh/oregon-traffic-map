@@ -21,7 +21,7 @@ public class IncidentService : IIncidentService
 
     /**
       * Makes an HTTP request from the ODOT TripCheck data and returns an array
-       * of Incidents.
+      * of Incidents.
       */
     public async Task<List<Incident>> GetActiveIncidentsAsync()
     {
@@ -49,6 +49,7 @@ public class IncidentService : IIncidentService
                 EventTypeId = GetString(item, "event-type-id"),
                 Headline = GetString(item, "headline"),
                 Severity = GetString(item, "impact-desc"),
+                SeverityId = GetString(item, "severity-id"),
                 Comments = GetString(item, "comments"),
                 IsActive = GetString(item, "is-active") == "true",
                 StartTime = GetDateTime(item, "create-time"),

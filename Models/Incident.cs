@@ -7,6 +7,7 @@ public class Incident
     public string? Headline { get; set; }
     public string? Category { get; set; }
     public string? Severity { get; set; }
+    public string? SeverityId { get; set; }
     public string? Route { get; set; }
     public double? Milepost { get; set; }
     public string? LocationName { get; set; }
