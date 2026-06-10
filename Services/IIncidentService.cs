@@ -4,5 +4,5 @@ namespace OdotTrafficIncidentMap.Services;
 
 public interface IIncidentService
 {
-    Task<List<Incident>> GetActiveIncidentsAsync();
+    Task<IncidentResponse> GetActiveIncidentsAsync();
 }

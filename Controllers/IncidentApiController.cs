@@ -28,8 +28,8 @@ public class IncidentApiController : ControllerBase
         try
         {
             // fetch active incidents using the IncidentService class
-            var incidents = await _incidentService.GetActiveIncidentsAsync();
-            return Ok(incidents);
+            var result = await _incidentService.GetActiveIncidentsAsync();
+            return Ok(result);
         }
         catch (Exception ex)
         {

@@ -1,8 +1,8 @@
 using System.Text.Json;
 using OdotTrafficIncidentMap.Models;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace OdotTrafficIncidentMap.Services;
 
@@ -11,19 +11,60 @@ public class IncidentService : IIncidentService
     private readonly HttpClient _httpClient;
     private readonly ILogger<IncidentService> _logger;
     private readonly IConfiguration _configuration;
+    private readonly IMemoryCache _cache;
+    private const string CacheKey = "active_incidents";
+    private record CachedResult(List<Incident> Incidents, DateTime CachedAt);
 
-    public IncidentService(IHttpClientFactory httpClientFactory, ILogger<IncidentService> logger, IConfiguration configuration)
+    public IncidentService(IHttpClientFactory httpClientFactory, ILogger<IncidentService> logger, IConfiguration configuration, IMemoryCache cache)
     {
         _httpClient = httpClientFactory.CreateClient("TripCheck");
         _logger = logger;
         _configuration = configuration;
+        _cache = cache;
     }
 
-    /**
-      * Makes an HTTP request from the ODOT TripCheck data and returns an array
-      * of Incidents.
-      */
-    public async Task<List<Incident>> GetActiveIncidentsAsync()
+    /// <summary>
+    /// Gets the active incidents either from the cache, or, if the cache is out of
+    /// date or empty, calls the FetchFromTripCheckAsync method.
+    /// </summary>
+    public async Task<IncidentResponse> GetActiveIncidentsAsync()
+    {
+        List<Incident> incidents;
+        DateTime cachedAt;
+        
+        // if the cache key is still valid and cache isn't empty, grab incidents from cache
+        if (_cache.TryGetValue(CacheKey, out CachedResult? cached) && cached != null)
+        {
+            _logger.LogInformation("Returning cached incidents");
+            incidents = cached.Incidents;
+            cachedAt = cached.CachedAt;
+        }
+        // otherwise, make the fetch request and reset the cache key
+        else 
+        {
+            incidents = await FetchFromTripCheckAsync();
+            cachedAt = DateTime.UtcNow;
+
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+
+            _cache.Set(CacheKey, new CachedResult(incidents, cachedAt), cacheOptions);
+            _logger.LogInformation("Cached {Count} incidents", incidents.Count);
+            _logger.LogInformation("Cached at {cachedAt}", cachedAt);
+        }
+
+        return new IncidentResponse {
+            Incidents = incidents,
+            CachedAt = cachedAt,
+            Count = incidents.Count
+        };
+    }
+
+    /// <summary>
+    /// Makes an HTTP request from the ODOT TripCheck data and returns an array
+    /// of Incidents. Should only be called if the cache is empty or out of date.
+    /// </summary>
+    private async Task<List<Incident>> FetchFromTripCheckAsync()
     {
         var apiKey = _configuration["TripCheck:ApiKey"];
         var request = new HttpRequestMessage(HttpMethod.Get,

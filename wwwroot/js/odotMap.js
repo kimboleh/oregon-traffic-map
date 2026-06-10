@@ -18,7 +18,14 @@ const view = new MapView({
 
 // Fetch incidents from the API endpoint
 const response = await fetch("/api/incidents");
-const incidents = await response.json();
+const data = await response.json();
+const incidents = data.incidents;
+const cachedAt = new Date(data.cachedAt);
+const count = data.count;
+
+// Display "last updated" info on the page
+document.getElementById("cache-info").textContent = 
+    `${count} active incidents · Last updated ${cachedAt.toLocaleTimeString()}`;
 
 // Create a graphics layer to hold incident points
 const graphicsLayer = new GraphicsLayer();
