@@ -1,15 +1,12 @@
 @{
     ViewData["Title"] = "Changelog";
+    var pageTitle = ViewData["Title"] as string ?? "Default Title";
 }
 @section HeadScripts {
     <link rel="stylesheet" href="~/css/changelog.css" asp-append-version="true" />
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<p>
-    <em>A place to track changes I've made to this app over time. Check back regularly for updates!</em>
-</p>
+@await Html.PartialAsync("_PageHeader", (pageTitle, "A place to track changes I've made to this app over time. Check back regularly for updates!"))
 
 <div id="changelog-lists">
     <h2>6.11.26</h2>

@@ -1,4 +1,5 @@
 using OdotTrafficIncidentMap.Services;
+using AspNetCore.SassCompiler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddHttpClient("TripCheck", client =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IIncidentService, IncidentService>();
+builder.Services.AddSassCompiler();
 
 var app = builder.Build();
 

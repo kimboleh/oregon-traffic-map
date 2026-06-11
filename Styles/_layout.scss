@@ -1,0 +1,88 @@
+@use 'variables' as *;
+
+html {
+  font-size: 14px;
+
+  @media (min-width: 768px) {
+    font-size: 16px;
+  }
+}
+
+html, body {
+  position: relative;
+  min-height: 100vh;
+}
+
+a {
+  color: $color-Greenie;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: $color-ODOTOrange;
+  border-color: $color-ODOTOrange;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+.navbar {
+  background-color: $color-ODOTBlue;
+}
+
+.navbar > div {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.navbar--title-and-icon {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+  font-size: 20px;
+}
+
+#site-nav-bar .nav-link {
+  color: #FFFFFF;
+  font-size: 16px;
+}
+
+#main-content {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - $header-height - $footer-height - 20px);
+  padding: 10px 100px;
+}
+
+.footer {
+  width: 100%;
+  white-space: nowrap;
+  padding: 20px 0;
+  line-height: 20px;
+}

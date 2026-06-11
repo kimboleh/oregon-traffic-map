@@ -1,0 +1,17 @@
+#viewDiv {
+    width: 100%;
+    flex: 1;
+    background-color: #D3D3D3;
+}
+
+// adjust the margin size for mobile devices
+@media (max-width: 768px) {
+    #main-content {
+        padding: 10px 50px;
+    }
+}
+@media (max-width: 450px) {
+    #main-content {
+        padding: 10px 20px;
+    }
+}
