@@ -1,0 +1,35 @@
+@{
+    ViewData["Title"] = "Changelog";
+}
+@section HeadScripts {
+    <link rel="stylesheet" href="~/css/changelog.css" asp-append-version="true" />
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <em>A place to track changes I've made to this app over time. Check back regularly for updates!</em>
+</p>
+
+<div id="changelog-lists">
+    <h2>6.10.26</h2>
+    <ul>
+        <li>Added caching for API pulls - currently set to 60 seconds</li>
+        <li>Added this changelog page to track changes!</li>
+        <li>Updated some routing paths</li>
+    </ul>
+    <h2>6.2.26</h2>
+    <ul>
+        <li>All incident types (that I've seen in the API, anyways) now have their own custom SVGs on the map</li>
+    </ul>
+    <h2>6.1.26</h2>
+    <ul>
+        <li>Added azure deployment action - now Azure is pulling directly from GitHub</li>
+        <li>Map icons for road work are now custom SVGs (sourced from Wikimedia Commons) reflecting the type and severity of incident they are</li>
+        <li>Incident description popups have custom titles for incident type</li>
+    </ul>
+    <h2>5.30.26</h2>
+    <ul>
+        <li>Site launched with a map and brief homepage description!</li>
+    </ul>
+</div>
