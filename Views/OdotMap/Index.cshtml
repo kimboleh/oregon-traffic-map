@@ -3,14 +3,16 @@
 }
 
 <!-- ArcGIS JS API from Esri CDN -->
-<!-- (rendering these in the <head>) -->
+<!-- (rendering this in the <head>) -->
 @section HeadScripts {
     <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
-    <link rel="stylesheet" href="~/css/odotMap.css" asp-append-version="true" />
 }
 
 <h1>ODOT Traffic Incident Map</h1>
 
+<div id="filter-sidebar" class="p-3">
+    <h6 class="fw-bold">Filter Incidents</h6>
+</div>
 <div id="viewDiv"></div>
 <div id="cache-info"></div>
 

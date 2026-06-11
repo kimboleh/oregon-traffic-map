@@ -1,17 +1,37 @@
+@use 'variables' as *;
+
 #viewDiv {
     width: 100%;
     flex: 1;
     background-color: #D3D3D3;
 }
 
-// adjust the margin size for mobile devices
-@media (max-width: 768px) {
-    #main-content {
-        padding: 10px 50px;
+#main-content {
+    padding: 10px $map-margin-default;
+    @media (max-width: $width--tablet) {
+        padding: 10px $map-margin-tablet;
+    }
+
+    @media (max-width: $width--mobile) {
+        padding: 10px $map-margin-mobile;
     }
 }
-@media (max-width: 450px) {
-    #main-content {
-        padding: 10px 20px;
+
+
+#filter-sidebar {
+    background-color: #FFFFFF;
+    border: solid #000000 1px;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: calc($map-margin-default + 10px);
+    margin-top: $header-height;
+    z-index: 10;
+
+    @media (max-width: $width--tablet) {
+        right: calc($map-margin-tablet + 10px);
+    }
+    @media (max-width: $width--mobile) {
+        right: calc($map-margin-mobile + 10px);
     }
 }

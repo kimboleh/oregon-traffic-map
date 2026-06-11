@@ -4,6 +4,9 @@ import FeatureLayer from "https://js.arcgis.com/4.30/@arcgis/core/layers/Feature
 import Graphic from "https://js.arcgis.com/4.30/@arcgis/core/Graphic.js";
 import GraphicsLayer from "https://js.arcgis.com/4.30/@arcgis/core/layers/GraphicsLayer.js";
 
+import { incidentTitle } from './incidentUtils.js';
+import { getActiveTypes, initFilters, shouldShowIncident } from './incidentFilter.js';
+
 const map = new Map({
     basemap: "streets-navigation-vector"
 });
@@ -19,7 +22,7 @@ const view = new MapView({
 // Fetch incidents from the API endpoint
 const response = await fetch("/api/incidents");
 const data = await response.json();
-const incidents = data.incidents;
+const allIncidents = data.incidents;
 const cachedAt = new Date(data.cachedAt);
 const count = data.count;
 
@@ -31,38 +34,52 @@ document.getElementById("cache-info").textContent =
 const graphicsLayer = new GraphicsLayer();
 map.add(graphicsLayer);
 
-incidents.forEach(incident => {
-    if (incident.longitude && incident.latitude) {
-        const point = {
-            type: "point",
-            longitude: incident.longitude,
-            latitude: incident.latitude
-        };
+// Initialize filters, passing renderIncidents as the callback
+initFilters(allIncidents, renderIncidents);
 
-        const symbol = eventSymbol(incident.eventTypeId, incident.severity);
+// Initial render
+renderIncidents();
 
-        const popupTemplate = {
-            title: incidentTitle(incident.eventTypeId),
-            content: `
-                <b>Headline:</b> ${incident.headline ?? "Unknown"}<br/>
-                <b>Severity:</b> ${incident.severity ?? "Unknown"}<br/>
-                <b>Route:</b> ${incident.route ?? "Unknown"}<br/>
-                <b>Milepost:</b> ${incident.milepost ?? "Unknown"}<br/>
-                <b>Location:</b> ${incident.locationName ?? "Unknown"}<br/>
-                <b>Last Updated:</b> ${incident.lastUpdated ? new Date(incident.lastUpdated).toLocaleString() : "Unknown"}<br/>
-                <b>Comments:</b> ${incident.comments ?? "None"}
-            `
-        };
+// Triggers a render of all incidents of active/displayed types
+function renderIncidents() {
+    const activeTypes = getActiveTypes();
+    graphicsLayer.removeAll();
 
-        const graphic = new Graphic({
-            geometry: point,
-            symbol: symbol,
-            popupTemplate: popupTemplate
+    allIncidents
+        .filter(i => activeTypes.has(i.eventTypeId))
+        .forEach(incident => {
+            if (incident.longitude && incident.latitude) {
+                const point = {
+                    type: "point",
+                    longitude: incident.longitude,
+                    latitude: incident.latitude
+                };
+
+                const symbol = eventSymbol(incident.eventTypeId, incident.severity);
+
+                const popupTemplate = {
+                    title: incidentTitle(incident.eventTypeId),
+                    content: `
+                        <b>Headline:</b> ${incident.headline ?? "Unknown"}<br/>
+                        <b>Severity:</b> ${incident.severity ?? "Unknown"}<br/>
+                        <b>Route:</b> ${incident.route ?? "Unknown"}<br/>
+                        <b>Milepost:</b> ${incident.milepost ?? "Unknown"}<br/>
+                        <b>Location:</b> ${incident.locationName ?? "Unknown"}<br/>
+                        <b>Last Updated:</b> ${incident.lastUpdated ? new Date(incident.lastUpdated).toLocaleString() : "Unknown"}<br/>
+                        <b>Comments:</b> ${incident.comments ?? "None"}
+                    `
+                };
+
+                const graphic = new Graphic({
+                    geometry: point,
+                    symbol: symbol,
+                    popupTemplate: popupTemplate
+                });
+
+                graphicsLayer.add(graphic);
+            }
         });
-
-        graphicsLayer.add(graphic);
-    }
-});
+}
 
 // Returns the appropriate symbol to use for the incident
 function eventSymbol(eventTypeId, severity) {
@@ -138,17 +155,4 @@ function severityColor(severity) {
     else if (s.includes("closure")) sevColor = "red";
     
     return sevColor;
-}
-
-function incidentTitle(eventTypeId) {
-    var popupHeadline = "";
-    if (!eventTypeId) popupHeadline = "Misc. Incident";
-    else if (eventTypeId === "RW") popupHeadline = "Road Work";
-    else if (eventTypeId === "OB") popupHeadline = "Obstruction";
-    else if (eventTypeId === "DV") popupHeadline = "Device Maintanence";
-    else if (eventTypeId === "VH") popupHeadline = "Vehicle Crash";
-    else if (eventTypeId === "MS") popupHeadline = "Closure";
-    else if (eventTypeId === "DS") popupHeadline = "Wildfire";
-
-    return popupHeadline;
 }
