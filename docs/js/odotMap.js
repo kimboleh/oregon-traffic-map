@@ -112,7 +112,7 @@ function eventSymbol(eventTypeId, severity) {
     // road work
     if (eventTypeId === "RW") symbol = {
         type: "picture-marker",
-        url: "/img/icons/roadwork-" + (severityColor(severity) === 'red' ? 'red' : 
+        url: "img/icons/roadwork-" + (severityColor(severity) === 'red' ? 'red' : 
         'orange') + ".svg",
         width: "24px",
         height: "24px"
@@ -120,7 +120,7 @@ function eventSymbol(eventTypeId, severity) {
     // obstruction
     else if (eventTypeId === "OB") symbol = {
         type: "picture-marker",
-        url: "/img/icons/caution-" + (severityColor(severity) === 'red' ? 'red' : 
+        url: "img/icons/caution-" + (severityColor(severity) === 'red' ? 'red' : 
         'orange') + ".svg",
         width: "24px",
         height: "20px"
@@ -128,28 +128,28 @@ function eventSymbol(eventTypeId, severity) {
     // device maintenance
     else if (eventTypeId === "DV") symbol = {
         type: "picture-marker",
-        url: "/img/icons/device-maintenance.svg",
+        url: "img/icons/device-maintenance.svg",
         width: "24px",
         height: "24px"
     };
     // vehicle accident
     else if (eventTypeId === "VH") symbol = {
         type: "picture-marker",
-        url: "/img/icons/accident-" + severityColor(severity) + ".svg",
+        url: "img/icons/accident-" + severityColor(severity) + ".svg",
         width: "24px",
         height: "24px"
     };
     // closure
     else if (eventTypeId === "MS") symbol = {
         type: "picture-marker",
-        url: "/img/icons/closure.svg",
+        url: "img/icons/closure.svg",
         width: "20px",
         height: "20px"
     };
     // wildfire
     else if (eventTypeId === "DS") symbol = {
         type: "picture-marker",
-        url: "/img/icons/wildfire.svg",
+        url: "img/icons/wildfire.svg",
         width: "24px",
         height: "24px"
     };
