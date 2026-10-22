@@ -19,12 +19,35 @@ const view = new MapView({
     zoom: 7
 });
 
+const QUERY_URL =
+    "https://services.arcgis.com/uUvqNMGPm7axC2dD/arcgis/rest/services/ODOT_Traffic_Incidents/FeatureServer/0/query" +
+    "?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=json";
+
+async function fetchIncidents() {
+    const response = await fetch(QUERY_URL);
+    const data = await response.json();
+
+    const incidents = data.features.map(f => ({
+        eventTypeId: f.attributes.attributes_eventTypeId, // verify this field name, see below
+        headline: f.attributes.attributes_eventTypeName,
+        category: f.attributes.attributes_odotCategoryDescript,
+        severity: f.attributes.attributes_odotSeverityDescript,
+        route: f.attributes.attributes_route,
+        milepost: f.attributes.attributes_beginMP,
+        locationName: f.attributes.attributes_locationName,
+        comments: f.attributes.attributes_comments,
+        startTime: f.attributes.attributes_startTime, // epoch milliseconds
+        longitude: f.geometry?.x,
+        latitude: f.geometry?.y
+    }));
+
+    return { incidents, cachedAt: new Date().toISOString(), count: incidents.length };
+}
 // Fetch incidents from the API endpoint
-const response = await fetch("/api/incidents");
-const data = await response.json();
-const allIncidents = data.incidents;
-const cachedAt = new Date(data.cachedAt);
-const count = data.count;
+const response = await fetchIncidents();
+const allIncidents = response.incidents;
+const cachedAt = new Date(response.cachedAt);
+const count = response.count;
 
 // Display "last updated" info on the page
 document.getElementById("cache-info").textContent = 

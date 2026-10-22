@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Odot Traffic Incident Map</title>
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/site.css"" />
+    <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
+    <script type="module" src="js/odotMap.js"></script>
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <header>
+        <nav id="site-nav-bar" class="navbar navbar-dark navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow">
+            <div class="container-fluid">
+                <a 
+                    class="navbar-brand"
+                    asp-area="" 
+                    href="/" 
+                    asp-action="Index"
+                >
+                    <span class="navbar--title-and-icon">
+                        <!-- SVG from World Population Review -->
+                        <img src="img/outline-or.svg" height="30px" />
+                        Oregon Traffic Incidents
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a 
+                                class="nav-link"
+                                href="/"
+                            >
+                                Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a 
+                                class="nav-link"
+                                href="/odotMap.html"
+                            >
+                                Traffic Map
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a 
+                                class="nav-link"
+                                href="/changelog.html"
+                            >
+                                Changelog
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main" id="main-content">
+        <div class="page-header mb-4">
+            <h1>Changelog</h1>
+            <p class="text-muted">A place to track changes I've made to this app over time. Check back regularly for updates!</p>
+        </div>
+
+        <div id="changelog-lists">
+            <h2>10.22.26</h2>
+            <ul>
+                <li>Converted my ASP.NET backend to a static front-end to host this app on GH Pages</li>
+            </ul>
+            <h2>6.11.26</h2>
+            <ul>
+                <li>Created and added a site favicon! :)</li>
+                <li>Switched the site over to SASS styling rather than plain CSS</li>
+                <li>Added ability to filter incident types in the map view</li>
+            </ul>
+            <h2>6.10.26</h2>
+            <ul>
+                <li>Added caching for API pulls - currently set to 60 seconds</li>
+                <li>Added this changelog page to track changes!</li>
+                <li>Updated some routing paths</li>
+            </ul>
+            <h2>6.2.26</h2>
+            <ul>
+                <li>All incident types (that I've seen in the API, anyways) now have their own custom SVGs on the map</li>
+            </ul>
+            <h2>6.1.26</h2>
+            <ul>
+                <li>Added azure deployment action - now Azure is pulling directly from GitHub</li>
+                <li>Map icons for road work are now custom SVGs (sourced from Wikimedia Commons) reflecting the type and severity of incident they are</li>
+                <li>Incident description popups have custom titles for incident type</li>
+            </ul>
+            <h2>5.30.26</h2>
+            <ul>
+                <li>Site launched with a map and brief homepage description!</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            <p>&copy; 2026 - Kimberly Nachbur</p>
+            <p><em>All information taken from public ArcGIS and ODOT data.</em></p>
+        </div>
+    </footer>
+</body>
+</html>
